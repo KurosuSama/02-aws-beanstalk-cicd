@@ -44,17 +44,21 @@ jobs:
       run: aws s3 cp beanstalk-docker-bundle.zip s3://beanstalkdockercicd/beanstalk-docker-bundle.zip
 
     - name: Deploy to Beanstalk
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: us-east-1
       run: |
         aws elasticbeanstalk create-application-version \
         --application-name vprofilebeandocker \
         --version-label "v${{ github.run_number }}" \
-        --source-bundle S3Bucket=beanstalkdockercicd,S3Key=beanstalk-docker-bundle.zip \
-        --region "us-east-1"
+        --source-bundle S3Bucket=beanstalkdockercicd,S3Key=beanstalk-docker-bundle.zip
+        
         
         aws elasticbeanstalk update-environment \
         --environment-name docker-beanstalk-env \
-        --version-label "v${{ github.run_number }}" \
-        --region "us-east-1"
+        --version-label "v${{ github.run_number }}"
+        
 
 
 
