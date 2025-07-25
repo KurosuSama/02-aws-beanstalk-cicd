@@ -48,14 +48,13 @@ jobs:
         aws elasticbeanstalk create-application-version \
         --application-name vprofilebeandocker \
         --version-label "v${{ github.run_number }}" \
-        --source-bundle S3Bucket=beanstalkdockercicd,S3Key=beanstalk-docker-bundle.zip
+        --source-bundle S3Bucket=beanstalkdockercicd,S3Key=beanstalk-docker-bundle.zip \
         --region "us-east-1"
         
         aws elasticbeanstalk update-environment \
         --environment-name docker-beanstalk-env \
-        --version-label "v${{ github.run_number }}"
+        --version-label "v${{ github.run_number }}" \
         --region "us-east-1"
 
 
 
-        
