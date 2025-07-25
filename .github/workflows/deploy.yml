@@ -34,7 +34,7 @@ jobs:
       run: mvn install
     
     - name: Zip Docker context for Beanstalk
-      run: zip -r beanstalk-docker-bundle.zip . -x '*.git' '*.md'
+      run: zip -r beanstalk-docker-bundle.zip . -x "*.git" "*.md"
 
     - name: Upload to S3
       env:
