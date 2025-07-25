@@ -1,0 +1,51 @@
+name: Deploy App to AWS
+on:
+  push:
+    branches:
+      - beanstak_docker
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Java and Maven
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'corretto'
+        java-version: '17'
+    
+    - name: Inject secrets into application.properties
+      run: |
+        cp src/main/resources/application.properties.template src/main/resources/application.properties
+        sed -i "s|\${DB_END}|${{ secrets.DB_END }}|g" src/main/resources/application.properties
+        sed -i "s|\${DB_USER}|${{ secrets.DB_USER }}|g" src/main/resources/application.properties
+        sed -i "s|\${DB_PASS}|${{ secrets.DB_PASS }}|g" src/main/resources/application.properties
+        sed -i "s|\${MQ_USER}|${{ secrets.MQ_USER }}|g" src/main/resources/application.properties
+        sed -i "s|\${MQ_PASS}|${{ secrets.MQ_PASS }}|g" src/main/resources/application.properties
+        sed -i "s|\${MEM_HOST}|${{ secrets.MEM_HOST }}|g" src/main/resources/application.properties
+
+
+
+    - name: Build WAR artifact
+      run: mvn install
+    
+    - name: Zip Docker context for Beanstalk
+      run: zip -r beanstalk-docker-bundle.zip . -x '*.git' '*.md'
+
+    - name: Upload to S3
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: us-east-1
+      run: aws s3 cp beanstalk-docker-bundle.zip s3://beanstalkdockercicd/beanstalk-docker-bundle.zip
+
+    - name: Deploy to Beanstalk
+      run: |
+
+
+
+        

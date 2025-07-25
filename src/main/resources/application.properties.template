@@ -1,0 +1,9 @@
+jdbc.url=jdbc:mysql://${DB_END}:3306/accounts?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+jdbc.username=${DB_USER}
+jdbc.password=${DB_PASS}
+
+memcached.active.host=${MEM_HOST}
+
+rabbitmq.address=${MQ_URL}
+rabbitmq.username=${MQ_USER}
+rabbitmq.password=${MQ_PASS}
