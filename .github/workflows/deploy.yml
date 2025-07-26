@@ -50,13 +50,13 @@ jobs:
         AWS_DEFAULT_REGION: us-east-1
       run: |
         aws elasticbeanstalk create-application-version \
-        --application-name vprofilebeandocker \
+        --application-name vprobeandockercicd \
         --version-label "v${{ github.run_number }}" \
         --source-bundle S3Bucket=beanstalkdockercicd,S3Key=beanstalk-docker-bundle.zip
         
         
         aws elasticbeanstalk update-environment \
-        --environment-name docker-beanstalk-env \
+        --environment-name Vprobeandockercicd-env \
         --version-label "v${{ github.run_number }}"
         
 
