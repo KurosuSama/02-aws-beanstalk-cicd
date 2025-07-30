@@ -2,8 +2,8 @@ name: Deploy App to AWS
 on:
   push:
     branches:
-      - beanstak_docker
-
+      - beanstalk_tomcatcicd
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -47,13 +47,13 @@ jobs:
         AWS_DEFAULT_REGION: us-east-1
       run: |
         aws elasticbeanstalk create-application-version \
-        --application-name vprobeandockercicd \
+        --application-name vprotomcatcicd \
         --version-label "v${{ github.run_number }}" \
         --source-bundle S3Bucket=beanstalkdockercicd,S3Key=ROOT.war
         
         
         aws elasticbeanstalk update-environment \
-        --environment-name Vprobeandockercicd-env \
+        --environment-name Vprotomcatcicd-env \
         --version-label "v${{ github.run_number }}"
         
 
