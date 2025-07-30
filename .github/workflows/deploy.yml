@@ -32,16 +32,13 @@ jobs:
 
     - name: Build WAR artifact
       run: mvn install
-    
-    - name: Zip Docker context for Beanstalk
-      run: zip -r beanstalk-docker-bundle.zip . -x "./.gitignore.txt" "./*.md" "./.github"
 
-    - name: Upload to S3
+    - name: Upload WAR to S3
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: us-east-1
-      run: aws s3 cp beanstalk-docker-bundle.zip s3://beanstalkdockercicd/beanstalk-docker-bundle.zip
+      run: aws s3 cp target/*.war s3://beanstalkdockercicd/ROOT.war
 
     - name: Deploy to Beanstalk
       env:
@@ -52,7 +49,7 @@ jobs:
         aws elasticbeanstalk create-application-version \
         --application-name vprobeandockercicd \
         --version-label "v${{ github.run_number }}" \
-        --source-bundle S3Bucket=beanstalkdockercicd,S3Key=beanstalk-docker-bundle.zip
+        --source-bundle S3Bucket=beanstalkdockercicd,S3Key=ROOT.war
         
         
         aws elasticbeanstalk update-environment \
